@@ -1,0 +1,13 @@
+
+G	java:S106"+Replace this use of System.out by a logger.(ßæ§‘8¡ÒŒ¼È1
+G	java:S106%"+Replace this use of System.out by a logger.(ÆÀûý8£ÒŒ¼È1
+G	java:S1061"+Replace this use of System.out by a logger.(ÆÀûý8¥ÒŒ¼È1
+I
+java:S1602P",Remove useless curly braces around statement(Ò¦Óð8¥ÒŒ¼È1
+G	java:S106Q"+Replace this use of System.out by a logger.(ÆÀûý8¦ÒŒ¼È1
+n
+java:S3457R"Q%n should be used in place of \n to produce the platform-specific line separator.(²ž“ñ8¥ÒŒ¼È1
+L	java:S106^"+Replace this use of System.out by a logger.(Ì£ªôüÿÿÿÿ8¨ÒŒ¼È1
+s
+java:S3457^"Q%n should be used in place of \n to produce the platform-specific line separator.(Ì£ªôüÿÿÿÿ8¦ÒŒ¼È1
+G	java:S106k"+Replace this use of System.out by a logger.(©»£Ñ8ÄùŒ¼È1
