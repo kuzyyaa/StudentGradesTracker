@@ -32,8 +32,14 @@ public class Student implements Serializable {
      * @param grabe оценка
      */
     public void addGrade(Integer grabe) {
-        this.grades.add(grabe);
-        System.out.println(String.format("Для студента %s добавленна оценка %s", this.name, grabe));
+        if (grabe >= 1 && grabe <= 5) {
+            this.grades.add(grabe);
+            System.out.println(String.format("Для студента %s добавлена оценка %s", this.name, grabe));
+        } else {
+            System.out.println(
+                    String.format("ERROR: Оценка %s для студента %s не является допустимой , диапазон оценок от 1 до 5",
+                            grabe, this.name));
+        }
     }
 
     /**
@@ -43,15 +49,15 @@ public class Student implements Serializable {
      * @param grabe оценка
      */
     public void updateGrabe(Integer index, Integer grabe) {
-        if (this.grades.isEmpty()) {
+        if (index < 0 || index >= this.grades.size()) {
             System.out.println(
-                    String.format("Для студента %s отсутствуют оценки , поэтому нет возможности обновить.", this.name)
+                    String.format("ERROR: Для студента %s указан некорректный индекс оценки.", this.name)
             );
         } else {
-            var studentGrades = this.grades.get(index);
+            var studentGrade = this.grades.get(index);
             this.grades.set(index, grabe);
             System.out.println(
-                    String.format("Для студента %s обновлена оценка %s на %s", this.name, studentGrades, grabe)
+                    String.format("Для студента %s обновлена оценка %s на %s", this.name, studentGrade, grabe)
             );
         }
     }
