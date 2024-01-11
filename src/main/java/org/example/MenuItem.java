@@ -3,6 +3,8 @@ package org.example;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
+import java.util.function.Function;
+
 /**
  * Элемент меню
  */

@@ -1,8 +1,11 @@
 package org.example;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public class Menu {
@@ -18,6 +21,9 @@ public class Menu {
     private final Scanner scanner = new Scanner(System.in);
     private final Map<Integer, MenuItem> menuItems = new HashMap<>();
 
+    @Autowired
+    Map<Command, MenuFunction> map;
+
     public Menu() {
         System.out.println(DELIMITER);
         var command = getCommand("Загрузить файл с данными о студентах? (1-да,2-нет): ");
@@ -27,6 +33,21 @@ public class Menu {
         menuItems.put(SHOW_INFO_OPTION, new MenuItem("Информация о студенте", this::showStudentInfo));
         menuItems.put(DISPLAY_ALL_OPTION, new MenuItem("Отобразить всех студентов", this::displayAllStudents));
         menuItems.put(EXIT_OPTION, new MenuItem("Выход", this::exit));
+    }
+
+    @Autowired
+    List<MenuFunction> list;
+
+    @Bean
+    Map<Command, MenuFunction> commandMenuFunctionMap() throws Exception {
+        Map<Command, MenuFunction> collect = list.stream()
+            .collect(Collectors.toMap(MenuFunction::supportedAsType, Function.identity()));
+
+        if (Command.values().length != collect.size()) {
+            throw new Exception();
+        }
+
+        return collect;
     }
 
     public void run() {
@@ -201,6 +222,9 @@ public class Menu {
      * @param key ключ по которому можно найти функцию
      */
     public void executeFunction(int key) {
+        map.get(Command.values()[key]).apply();
+
+
         var function = menuItems.get(key);
         if (function != null) {
             function.getFunction().apply();
