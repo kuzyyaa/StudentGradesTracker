@@ -13,26 +13,22 @@ public class GradeTracker {
 
     /**
      * Конструктор трекера
+     *
      * @param newStudents флаг создания нового файла для студентов
      */
     public GradeTracker(boolean newStudents) {
 
-        this.students = newStudents ? new HashMap<>() : FileHelper.loadFromStudents();
+        this.students = newStudents ? FileHelper.loadFromStudents() :new HashMap<>() ;
         this.studentCounter = students.size() + 1;
     }
-    public GradeTracker(Map<Integer, Student> students) {
-        System.out.println("Загрузить файл с данными студентов? (1-да,2-нет)");
-        this.students = students;
-        this.studentCounter = students.size() + 1;
-    }
+
     /**
      * Добавить студента
      *
      * @param name имя студента
      */
     public void addStudent(String name) {
-        var student = new Student(name);
-        this.students.put(studentCounter, student);
+        this.students.put(studentCounter, new Student(name));
         studentCounter++;
         System.out.println(
                 String.format("Студент %s добавлен, общее количество студентов %s", name, getStudentCount()));
@@ -101,7 +97,7 @@ public class GradeTracker {
      * @param id студента
      * @return студент
      */
-    private Optional<Student> getStudent(Integer id) {
+    public Optional<Student> getStudent(Integer id) {
         var student = Optional.ofNullable(this.students.get(id));
         if (student.isEmpty()) {
             System.out.println(String.format("Студент с id %s не найден", id));

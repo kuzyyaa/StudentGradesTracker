@@ -1,6 +1,6 @@
 package org.example;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -16,17 +16,17 @@ public class Menu {
 
     private final GradeTracker tracker;
     private final Scanner scanner = new Scanner(System.in);
-    private final Map<Integer, String> menuMap = new LinkedHashMap<>();
+    private final Map<Integer, MenuItem> menuItems = new HashMap<>();
 
     public Menu() {
         System.out.println(DELIMITER);
         var command = getCommand("Загрузить файл с данными о студентах? (1-да,2-нет): ");
-        tracker = command.equals("1") ? new GradeTracker(true) : new GradeTracker(false);
-        menuMap.put(ADD_STUDENT_OPTION, "Добавить студента");
-        menuMap.put(REMOVE_STUDENT_OPTION, "Удалить студента");
-        menuMap.put(SHOW_INFO_OPTION, "Информация о студенте");
-        menuMap.put(DISPLAY_ALL_OPTION, "Отобразить всех студентов");
-        menuMap.put(EXIT_OPTION, "Выход");
+        tracker = new GradeTracker(command.equals("1"));
+        menuItems.put(ADD_STUDENT_OPTION, new MenuItem("Добавить студента", this::addStudent));
+        menuItems.put(REMOVE_STUDENT_OPTION, new MenuItem("Удалить студента", this::removeStudent));
+        menuItems.put(SHOW_INFO_OPTION, new MenuItem("Информация о студенте", this::showStudentInfo));
+        menuItems.put(DISPLAY_ALL_OPTION, new MenuItem("Отобразить всех студентов", this::displayAllStudents));
+        menuItems.put(EXIT_OPTION, new MenuItem("Выход", this::exit));
     }
 
     public void run() {
@@ -37,33 +37,13 @@ public class Menu {
 
             displayMenu();
 
-            var command = Integer.parseInt(getCommand("Выберите опцию:  "));
-            switch (command) {
-                case ADD_STUDENT_OPTION:
-                    System.out.println(DELIMITER);
-                    addStudent();
-                    break;
-                case REMOVE_STUDENT_OPTION:
-                    System.out.println(DELIMITER);
-                    removeStudent();
-                    break;
-                case SHOW_INFO_OPTION:
-                    System.out.println(DELIMITER);
-                    showStudentInfo();
-                    break;
-                case DISPLAY_ALL_OPTION:
-                    System.out.println(DELIMITER);
-                    displayAllStudents();
-                    break;
-                case EXIT_OPTION:
-                    System.out.println(DELIMITER);
-                    System.out.println("Закрытие программы!");
-                    scanner.close();
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println(DELIMITER);
-                    System.out.println("Не удалось распознать команду, попробуйте еще раз.");
+            try {
+                var option = Integer.parseInt(getCommand("Выберите опцию:  "));
+                System.out.println(DELIMITER);
+                executeFunction(option);
+            } catch (Exception e) {
+                System.out.println(DELIMITER);
+                System.out.printf("ERROR: %s", e.getMessage());
             }
         }
     }
@@ -73,7 +53,16 @@ public class Menu {
      */
     private void displayMenu() {
         System.out.println("Меню:");
-        menuMap.forEach((key, name) -> System.out.println(String.format("%s. %s", key, name)));
+        menuItems.forEach((key, item) -> System.out.println(String.format("%s. %s", key, item.getDescription())));
+    }
+
+    /**
+     * Закрытие
+     */
+    private void exit() {
+        System.out.println("Закрытие программы!");
+        scanner.close();
+        System.exit(0);
     }
 
     /**
@@ -115,6 +104,9 @@ public class Menu {
         var studentId = Integer.parseInt(command);
 
         while (true) { //NOSONAR
+            if (tracker.getStudent(studentId).isEmpty()) {
+                return;
+            }
             tracker.displayGrades(studentId);
 
             System.out.println(DELIMITER);
@@ -201,5 +193,19 @@ public class Menu {
      */
     private boolean checkForExit(String command) {
         return command.equals("-1");
+    }
+
+    /**
+     * Выполнить функцию
+     *
+     * @param key ключ по которому можно найти функцию
+     */
+    public void executeFunction(int key) {
+        var function = menuItems.get(key);
+        if (function != null) {
+            function.getFunction().apply();
+        } else {
+            System.out.println("Не удалось распознать команду, попробуйте еще раз.");
+        }
     }
 }

@@ -23,7 +23,7 @@ public class FileHelper {
             var ois = new ObjectInputStream(new FileInputStream(DATA_FILE_NAME));
             return (Map<Integer, Student>) ois.readObject();
         } catch (Exception e) {
-            System.out.printf("Ошибка чтение файла: ", e.getMessage());
+            System.out.printf("ERROR: Ошибка чтение файла: ", e.getMessage());
         }
         return new HashMap<>();
     }
@@ -38,7 +38,7 @@ public class FileHelper {
             var oos = new ObjectOutputStream(new FileOutputStream(DATA_FILE_NAME));
             oos.writeObject(students);
         } catch (Exception e) {
-            System.out.printf("Ошибка сохранения файла: ", e.getMessage());
+            System.out.printf("ERROR: Ошибка сохранения файла: ", e.getMessage());
         }
     }
 }
